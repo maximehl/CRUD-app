@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body{
+      font-family: sans-serif;
+      padding: 15px;
+      text-align: center;
+    }
+    h1{
+      margin: 0 auto;
+    }
+    div{
+      margin:10px auto;
+      border-radius: 10px;
+      background-color: lightgrey;
+      padding: 15px;
+      width: 400px;
+    }
+    ul{
+      margin: 0 0 0 -20px;
+      text-align: left;
+    }
+    input{
+      margin: 5px 0;
+    }
+    .click{
+      color: #1969ea;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .click:hover{
+      color: #528cea;
+    }
+    .click:active{
+      color: #8eb2ed;
+    }
+    button{
+      margin:10px auto;
+    }
+  </style>
+
+  <script>
+    function verifyForm(data){
+      document.getElementById("errorDiv").innerHTML = "";
+      var errorMsgs = ["You can't even make up a name for your imaginary friends? How sad.<br>",
+        "No picture? Your 'friend' must be quite reclusive.<br>",
+        "Everyone does <i>something</i> while awaiting the end of this tedious existence, don't they?<br>",
+        "Oh, come now, no human is perfect. Everyone has their flaws, and your friend is no different.<br>"]
+      var fields = [data.friendName.value, data.pictureNum.value,
+        data.hobbies.value, data.peeves.value];
+      for(var i=0; i<fields.length; i++){
+        if(fields[i]===""){
+          document.getElementById("errorDiv").innerHTML = errorMsgs[i];
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function editFriend(idNum, friendName, pictureNum, hobbies, peeves){
+      document.getElementById("formAction").innerHTML="editing: " + friendName
+        + "<br><button onclick='window.location.reload()'>Create a new Friend</button>";
+      document.getElementById("formName").value=friendName;
+      document.getElementById("formPicture").value=parseInt(pictureNum);
+      document.getElementById("formHobbies").value=hobbies;
+      document.getElementById("formPeeves").value=peeves;
+      document.getElementById("formIDNum").value=idNum;
+      window.scrollTo(0, 0);
+    }
+  </script>
+
+</head>
+<body>
+  <h1>List of Friends and Associates</h1>
+
+  <div>
+    Now <span id="formAction">creating: Person <%=numPeople%></span> <br>
+    <form action="/friends" method="POST" onsubmit="return verifyForm(this)">
+      Full name: <input type="text" id="formName" name="friendName"><br>
+      Picture: <input type="number" id="formPicture" name="pictureNum"><br>
+      Hobbies: <input type="text" id="formHobbies" name="hobbies"><br>
+      Pet peeves: <input type="text" id="formPeeves" name="peeves"><br>
+      <input type="hidden" id="formIDNum" name="idNum" value="<%=numPeople%>">
+      <span id="errorDiv"></span>
+      <input type="submit">
+    </form>
+  </div>
+  <div>
+    <ul>
+      <% for(var i=0; i<friendResults.length; i++){%>
+          <li>
+              <b><%= friendResults[i].friendName%></b><br>
+              Hobbies: <%= friendResults[i].hobbies%><br>
+              Pet peeves: <%= friendResults[i].peeves%><br>
+              <span class="click"
+                onclick="editFriend('<%=friendResults[i].idNum%>',
+                  '<%=friendResults[i].friendName%>','<%=friendResults[i].pictureNum%>',
+                  '<%=friendResults[i].hobbies%>','<%=friendResults[i].peeves%>')">
+                  Edit this friend</span>&nbsp; &nbsp; &nbsp;
+              <a class="click" href="/delete/<%= friendResults[i].idNum %>">Delete this friend</a>
+          </li>
+      <%} %>
+    </ul>
+  </div>
+  <!--img src="D:/images/person7.png" alt="person icon 7"></img-->
+</body>
+
+</html>
