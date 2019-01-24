@@ -84,7 +84,7 @@ app.post('/friends', function (req, res) {
       {friendName:req.body.friendName, pictureNum: parseInt(req.body.pictureNum),
       hobbies:req.body.hobbies, peeves:req.body.peeves, idNum:parseInt(req.body.idNum)})
   }
-  
+
   res.redirect('/')
 })
 
@@ -92,7 +92,8 @@ var db
 MongoClient.connect('mongodb://maximehl:12collections@ds243085.mlab.com:43085/collections', {useNewUrlParser: true}, (err, client) => {
   if (err) return console.log(err)
   db = client.db('collections') //sets database var equal to global db var above
-  app.listen(3000, () => {
+  var port = process.env.PORT || 80
+  app.listen(port, () => {
     console.log('listening on 3000')
   })
 })
